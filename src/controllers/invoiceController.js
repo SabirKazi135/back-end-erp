@@ -32,6 +32,7 @@ const createInvoice = async (req, res) => {
           create: (items || []).map((row) => ({
             itemId: String(row.itemId || ""),
             itemName: row.itemName,
+            unit: row.unit || "",
             qty: Number(row.qty || 0),
             rate: Number(row.rate || 0),
             amount: Number(row.amount || 0),
@@ -106,6 +107,7 @@ const updateInvoice = async (req, res) => {
           create: (req.body.items || []).map((row) => ({
             itemId: String(row.itemId || ""),
             itemName: row.itemName,
+            unit: row.unit || "",
             qty: Number(row.qty || 0),
             rate: Number(row.rate || 0),
             amount: Number(row.amount || 0),
