@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+
+  companies Company[]
+  items     Item[]
+  invoices  Invoice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Company {
+  id     Int @id @default(autoincrement())
+  userId Int
+
+  companyName String
+  ownerName   String?
+  email       String?
+  phone       String?
+  gstNumber   String?
+  address     String?
+
+  bankName      String?
+  accountNumber String?
+  ifscCode      String?
+  branchName    String?
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items    Item[]
+  invoices Invoice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Item {
+  id        Int @id @default(autoincrement())
+  userId    Int
+  companyId Int
+
+  itemName      String
+  brandName     String?
+  hsnCode       String?
+  unit          String?
+  salePrice     Float   @default(0)
+  purchasePrice Float   @default(0)
+  stockQty      Float   @default(0)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Invoice {
+  id        Int @id @default(autoincrement())
+  userId    Int
+  companyId Int
+
+  billNo       String?
+  customerName String?
+  address      String?
+  mobile       String?
+  billDate     String?
+
+  subtotal   Float   @default(0)
+  grandTotal Float   @default(0)
+  isDraft    Boolean @default(false)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  items InvoiceItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InvoiceItem {
+  id        Int @id @default(autoincrement())
+  invoiceId Int
+
+  itemId   String?
+  itemName String?
+  qty      Float   @default(0)
+  rate     Float   @default(0)
+  amount   Float   @default(0)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
