@@ -95,6 +95,7 @@ model InvoiceItem {
 
   itemId   String?
   itemName String?
+  unit     String?
   qty      Float   @default(0)
   rate     Float   @default(0)
   amount   Float   @default(0)
